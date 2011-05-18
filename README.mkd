@@ -1,0 +1,5 @@
+# Modelling
+
+Spiking models, collections and emitters in JavaScript.
+
+## THIS IS WORK IN PROGRESS
