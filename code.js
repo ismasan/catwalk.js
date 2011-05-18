@@ -129,9 +129,13 @@ var Collection = (function () {
   Collection.extend({
     
     scope: function (scope_name, filter) {
-      this.scopes[scope_name] = new Collection(this, filter, this);
-      this[scope_name] = this.scopes[scope_name];
-      return this;
+      if(filter == undefined) { // return scope
+        return this.scopes[scope_name];
+      } else { // create scope
+        this.scopes[scope_name] = new Collection(this, filter, this);
+        this[scope_name] = this.scopes[scope_name];
+        return this;
+      }
     },
     
     add: function (model) {
