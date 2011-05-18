@@ -1,0 +1,20 @@
+target_dir './dist'
+
+src_dir './src'
+
+version '0.0.1'
+
+bundle 'modelling.js' do
+  license 'license.txt'
+  file 'uuid.js'
+  file 'head.js'
+  file 'utils.js'
+  file 'events.js'
+  file 'model.js'
+  file 'collection.js'
+  file 'foot.js'
+end
+
+filter do |src, config|
+  src.gsub /<VERSION>/, config.version.to_s
+end
