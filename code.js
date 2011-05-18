@@ -112,6 +112,11 @@ var Collection = (function () {
     this.filter = filter || function (model) {return true;}
     this.scopes = {};
     var self = this;
+    if(this._parent) { // parent might already have models. Prepopulate
+      this._parent.forEach(function (m) {
+        self.add(m);
+      })
+    }
     this.emitter_klass.bind('remove', function (m) {
       self.remove(m);
     }).bind('add', function (m) {
