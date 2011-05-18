@@ -122,6 +122,8 @@ var Collection = (function () {
     }).bind('add', function (m) {
       self.add(m);
     });
+    
+    this.length = this.collection.length;
   }
   
   Collection.extend = function() {
@@ -155,22 +157,23 @@ var Collection = (function () {
       }
       // Not included and matches scope. Add it!
       this.collection.push(model);
+      this.length = this.collection.length;
       this.trigger('add', [model]);
-      var to_children = arguments[1] == undefined ? true : arguments[1];
+      
       return this;
     },
     
     remove: function (model) {
       if(!this.includes(model)) return this;
       var new_coll = [], removed = false;
-      for(var i = 0; i < this.collection.length; i++) {
-        if(!this.comparator(this.collection[i], model)) new_coll.push(this.collection[i])
+      this.collection.forEach(function (m) {
+        if(!this.comparator(m, model)) new_coll.push(m)
         else {removed = true;}
-      }
+      });
       if(removed) {
         this.collection = new_coll;
+        this.length = this.collection.length;
         this.trigger('remove', [model]);
-        var to_children = arguments[1] == undefined ? true : arguments[1];
       }
       return this;
     },
@@ -196,11 +199,7 @@ var Collection = (function () {
     },
     
     forEach: function (iterator) {
-      var l = this.count();
-      for(var i=0;i<l;i++) {
-        var model = this.collection[i];
-        iterator.apply(this, [model, i]);
-      }
+      this.collection.forEach(iterator);
       return this;
     },
     
