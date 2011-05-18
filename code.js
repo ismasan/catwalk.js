@@ -88,14 +88,14 @@ var Model = function (klass_name) {
     },
     
     destroy: function () {
-      this.trigger('destroy');
-      this.constructor.trigger('destroy', [this]);
+      this.trigger('remove');
+      this.constructor.trigger('remove', [this]);
       return this;
     },
     
     save: function () {
-      this.trigger('save');
-      this.constructor.trigger('save', [this]);
+      this.trigger('add');
+      this.constructor.trigger('add', [this]);
       return this;
     }
   });
@@ -112,9 +112,9 @@ var Collection = (function () {
     this.filter = filter || function (model) {return true;}
     this.scopes = {};
     var self = this;
-    this.emitter_klass.bind('destroy', function (m) {
+    this.emitter_klass.bind('remove', function (m) {
       self.remove(m);
-    }).bind('save', function (m) {
+    }).bind('add', function (m) {
       self.add(m);
     });
   }
@@ -129,7 +129,7 @@ var Collection = (function () {
   Collection.extend({
     
     scope: function (scope_name, filter) {
-      this.scopes[scope_name] = new Collection(this.emitter_klass, filter, this);
+      this.scopes[scope_name] = new Collection(this, filter, this);
       this[scope_name] = this.scopes[scope_name];
       return this;
     },
