@@ -1,1 +1,1 @@
-})(undefined, Modelling);
+})(undefined, Catwalk);

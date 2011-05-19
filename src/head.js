@@ -1,2 +1,2 @@
-Modelling = {};
+Catwalk = {};
 (function (undefined, M) {

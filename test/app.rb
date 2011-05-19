@@ -9,5 +9,5 @@ end
 
 get '/bundle.js' do
   content_type 'application/x-javascript'
-  JBundle.build('modelling.js').src
+  JBundle.build('catwalk.js').src
 end

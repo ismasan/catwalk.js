@@ -4,7 +4,7 @@ src_dir './src'
 
 version '0.0.1'
 
-bundle 'modelling.js' do
+bundle 'catwalk.js' do
   license 'license.txt'
   file 'uuid.js'
   file 'head.js'

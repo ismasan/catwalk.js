@@ -2,14 +2,14 @@ module('Saving', {
   setup: function () {
     
     
-    var User = Modelling.Model('user').extend({
+    var User = Catwalk.Model('user').extend({
       name: function () {
         return this.attr('name')
       }
     })
 
 
-    var UserList = new Modelling.Collection(User);
+    var UserList = new Catwalk.Collection(User);
 
     UserList.scope('marks', function (model) {
       return model.name() == 'mark';
