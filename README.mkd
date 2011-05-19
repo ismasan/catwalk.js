@@ -3,3 +3,70 @@
 Spiking models, collections and emitters in JavaScript.
 
 ## THIS IS WORK IN PROGRESS
+
+## The gist
+
+Define a model with some custom methods
+
+    var User = Catwalk.Model().extend({
+      name: function () {
+        return this.attr('name')
+      }
+    });
+    
+Define one or more collections listening to models
+
+    var user_list = new Catwalk.Collection(User)
+    
+    user_list.bind('add', function (user) {
+      console.log('A new user has been created!', user);
+    }).bind('remove', function (user) {
+      console.log('A user has been removed', user)
+    })
+    
+Try it
+
+    var user = new User({name: 'John Doe'}).save()
+    
+    user.destroy();
+    
+Define scopes listening to certain models
+
+   user_list.scope('johns', function (user) {
+      return /^joh/.test(user.name())
+   }).bind('add', function (user) {
+      console.log('A John has been added', user)
+   })
+   
+   user_list.scope('janes', function (user) {
+       return /^jan/.test(user.name())
+    }).bind('add', function (user) {
+       console.log('A Jane has been added', user)
+    })
+   
+Now the scope triggers 'add' and 'remove' only for the right users
+
+    var user = new User({name: 'john'}).save() // user_list.johns triggers 'add'
+    
+    var user2 = new User({name: 'johannes'}).save() // user_list.johns triggers 'add'
+    
+    
+    user.attr({name: 'jane'}).save() // user_list.johns triggers 'remove'. user_list.janes triggers 'add'
+
+    
+## Collections observing collections
+
+Collections bind to anything that triggers 'add' and 'remove' with a model instance as an argument, so you can have collections listening to other collections (or collection scopes!)
+
+    var johns_list = new Catwalk.Collection(user_list.johns)
+    
+    var user = new User({name: 'john doe'}).save()
+    
+    user_list.length // => 1
+    
+    johns_list.length // => 1
+  
+    
+    
+    
+    
