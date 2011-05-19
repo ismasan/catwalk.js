@@ -1,47 +1,63 @@
+var User = Catwalk.Model('user').extend({
+  name: function () {
+    return this.attr('name')
+  }
+});
+
+var results = [];
+
+
+UserList = new Catwalk.Collection(User);
+
+UserList.bind('add', function (m) {
+  results.push('Model added '+m.name())
+})
+
+UserList.scope('marks', function (model) {
+  return model.name() == 'mark';
+});
+
+UserList.scope('ismaels', function (model) {
+  return model.name() == 'ismael';
+});
+
+UserList.marks.bind('add', function (m) {
+  results.push('Mark added '+m.name())
+}).bind('remove', function (m) {
+  results.push('Mark removed '+m.name())
+});
+
+UserList.ismaels.bind('add', function (m) {
+  results.push('Ismael added '+m.name())
+}).bind('remove', function (m) {
+  results.push('Ismael removed '+m.name())
+})
+
+user = new User({name: 'ismael'}).save();
+
 module('Saving', {
   setup: function () {
+
     
-    
-    var User = Catwalk.Model('user').extend({
-      name: function () {
-        return this.attr('name')
-      }
-    })
-
-
-    var UserList = new Catwalk.Collection(User);
-
-    UserList.scope('marks', function (model) {
-      return model.name() == 'mark';
-    });
-
-    UserList.scope('ismaels', function (model) {
-      return model.name() == 'ismael';
-    });
-
-    UserList.bind('add', function (m) {
-      console.log('Model added', m)
-    })
-
-    UserList.marks.bind('add', function (m) {
-      console.log('mark added', m)
-    }).bind('remove', function (m) {
-      console.log('mark removed', m)
-    });
-
-    UserList.ismaels.bind('add', function (m) {
-      console.log('ismael added', m)
-    }).bind('remove', function (m) {
-      console.log('ismael removed', m)
-    })
-
-    l = UserList;
-    u = new User({name: 'ismael'}).save();
     
   }
 });
 
 test('it should save in subscribed collections', function () {
-  equal(u, l.last())
-  
+  equal(user, UserList.last())
+  equal(1, UserList.length)
 });
+
+test('it should save in relevant scopes', function () {
+  equal(user, UserList.ismaels.last())
+  equal(1, UserList.ismaels.length)
+})
+
+test('it should not add to non-relevant scopes', function () {
+  equal(0, UserList.marks.length)
+})
+
+test('it should run attached handlers', function () {
+  equal(results[0], 'Model added ismael')
+  equal(results[1], 'Ismael added ismael')
+})

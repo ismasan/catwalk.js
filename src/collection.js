@@ -94,7 +94,7 @@ M.Collection = (function () {
     },
     
     forEach: function (iterator) {
-      this.collection.forEach(iterator);
+      this.collection.forEach(iterator, this);
       return this;
     },
     
