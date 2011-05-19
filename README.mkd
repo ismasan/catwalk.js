@@ -1,4 +1,4 @@
-# Modelling
+# Catwalk.js
 
 Spiking models, collections and emitters in JavaScript.
 
