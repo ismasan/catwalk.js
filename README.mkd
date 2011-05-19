@@ -32,17 +32,17 @@ Try it
     
 Define scopes listening to certain models
 
-   user_list.scope('johns', function (user) {
-      return /^joh/.test(user.name())
-   }).bind('add', function (user) {
-      console.log('A John has been added', user)
-   })
-   
-   user_list.scope('janes', function (user) {
-       return /^jan/.test(user.name())
+    user_list.scope('johns', function (user) {
+       return /^joh/.test(user.name())
     }).bind('add', function (user) {
-       console.log('A Jane has been added', user)
+       console.log('A John has been added', user)
     })
+    
+    user_list.scope('janes', function (user) {
+        return /^jan/.test(user.name())
+     }).bind('add', function (user) {
+        console.log('A Jane has been added', user)
+     })
    
 Now the scope triggers 'add' and 'remove' only for the right users
 
