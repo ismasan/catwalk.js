@@ -71,7 +71,7 @@ Collections bind to anything that triggers 'add' and 'remove' with a model insta
 
     git clone ... && cd catwalk.js
     bundle install
-    ruby test/app
+    shotgun test/config.ru
     open test/index.html
     
     
