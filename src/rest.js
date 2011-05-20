@@ -1,6 +1,6 @@
 M.REST = function (emitter_klass) {
   
-  var REST = new M.Collection(emitter_klass).extend({
+  var REST = new M.Scope(emitter_klass).extend({
     
     add: function (m) {
       this.trigger('adding', [m]);

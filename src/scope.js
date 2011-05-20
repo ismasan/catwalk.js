@@ -1,4 +1,4 @@
-M.Collection = (function () {
+M.Scope = (function () {
   
   var klass = function (emitter_klass, filter, parent) {
     this.emitter_klass = emitter_klass;

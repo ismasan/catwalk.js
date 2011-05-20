@@ -7,7 +7,7 @@ var User = Catwalk.Model('user').extend({
 var results = [];
 
 
-UserList = new Catwalk.Collection(User);
+UserList = new Catwalk.Scope(User);
 
 UserList.bind('add', function (m) {
   results.push('Model added '+m.name())
