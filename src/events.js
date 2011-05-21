@@ -1,4 +1,4 @@
-M.Events = {
+Catwalk.Events = {
   
   event_stack: function (evt_name) {
     this._events = this._events || {};

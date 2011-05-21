@@ -1,2 +1,2 @@
 Catwalk = {};
-(function (undefined, M) {
+(function (undefined) {

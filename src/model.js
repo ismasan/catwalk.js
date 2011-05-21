@@ -1,23 +1,19 @@
-M.Model = function (klass_name) {
-  var klass = function () {
+Catwalk.Model = function (klass_name) {  
+  
+  function Model () {
     this.uid = NewUUID();
     this.attributes = {};
     if(arguments.length > 0) this.attr(arguments[0])
   }
   
-  klass._name = klass_name;
+  Model._name = klass_name;
   
-  klass.extend = function() {
-    Base.extend.apply(klass.prototype, arguments);
-    return this;
-  }
+  Base.extend.call(Model, Base)
 
-  _extend(klass, M.Events);
-  
-  klass.extend(Base, M.Events);
+  Model.extend(Catwalk.Events)
   
   // Instance methods
-  klass.extend({
+  Model.include(Catwalk.Events, {
     
     id: function () {
       return this.uid;
@@ -30,7 +26,7 @@ M.Model = function (klass_name) {
         if(typeof(arguments[0]) == 'string') // read one
           return this.attributes[arguments[0]];
         else  {// set many
-          _extend(this.attributes, arguments[0]);
+          _.extend(this.attributes, arguments[0]);
           return this;
         }
       } else {
@@ -51,5 +47,6 @@ M.Model = function (klass_name) {
     }
   });
   
-  return klass;
+  return Model;
+   
 }

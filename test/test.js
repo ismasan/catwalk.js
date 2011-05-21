@@ -1,4 +1,4 @@
-var User = Catwalk.Model('user').extend({
+var User = Catwalk.Model('user').include({
   name: function () {
     return this.attr('name')
   }
@@ -37,13 +37,12 @@ user = new User({name: 'ismael'}).save();
 
 module('Saving', {
   setup: function () {
-
-    
     
   }
 });
 
 test('it should save in subscribed collections', function () {
+  console.log('aaaaaaaaaa', UserList.collection)
   equal(user, UserList.last())
   equal(1, UserList.length)
 });

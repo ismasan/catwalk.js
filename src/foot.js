@@ -1,1 +1,1 @@
-})(undefined, Catwalk);
+})(undefined);

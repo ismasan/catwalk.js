@@ -6,6 +6,7 @@ version '0.0.1'
 
 bundle 'catwalk.js' do
   license 'license.txt'
+  file 'underscore.js'
   file 'uuid.js'
   file 'head.js'
   file 'utils.js'

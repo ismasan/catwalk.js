@@ -1,12 +1,12 @@
-M.REST = function (emitter_klass) {
+Catwalk.REST = function (emitter) {
   
-  var REST = new M.Scope(emitter_klass).extend({
+  var REST = new Catwalk.Scope(emitter).extend({
     
     add: function (m) {
       this.trigger('adding', [m]);
       var self = this;
       setTimeout(function () {
-        M.Collection.prototype.add.apply(self, [m])
+        Catwalk.Scope.prototype.add.apply(self, [m])
       }, 2000);
     },
     
@@ -14,7 +14,7 @@ M.REST = function (emitter_klass) {
       this.trigger('removing', [m]);
       var self = this;
       setTimeout(function () {
-        M.Collection.prototype.remove.apply(self, [m])
+        Catwalk.Scope.prototype.remove.apply(self, [m])
       }, 2000);
     }
     
