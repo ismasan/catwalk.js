@@ -1,5 +1,28 @@
+// Catwalk.Scope
+// -----------------
+//  Scopes define criteria to trigger 'add' or 'remove' models.
+//  A scope defines a simple filter function that takes a model instance and must return a boolean.
+
+//  ** Example: **
+//  
+//      var user_list = new Catwalk.Scope(User, function (model) {
+//        return /^is/i.test(model.attr('name'))
+//      })
+//      var user = new User({name: 'ismael'}) 
+//      // user_list triggers 'add' with this user
+//      user.attr('name', 'john') 
+//      // user_list triggers 'remove' with this user
+//  
 Catwalk.Scope = (function () {
   
+  // Constructor
+  // ----------------
+  // Instantiate a scope with anything that triggers 'add', 'change' or 'remove'. 
+  // Normally a model constructor or even another scope.
+  //
+  //     var user_list = new Catwalk.Scope(User, function (model) {
+  //       return /^is/i.test(model.attr('name'))
+  //     })
   
   function Scope (emitter, criteria) {
     this.emitter = emitter;
@@ -11,8 +34,10 @@ Catwalk.Scope = (function () {
       self.update(model);
       return self;
     }
+    // Bind to emitter's lifecycle events
     emitter.bind('add', handler).bind('remove', handler).bind('change', handler);
-    // Retrospective add
+    // Retrospectively add previously created models to this scope.
+    // The scope might have been cerated dinamically at a later stage so model instances might already be around.
     if(emitter.each) {
       emitter.each(function () {
         self.update(this);
@@ -20,6 +45,9 @@ Catwalk.Scope = (function () {
     }
     this.length = this.collection.length;
   }
+  
+  // Borrow array functional methods from underscore.js. No point in reinventing an already very round wheel.
+  // http://documentcloud.github.com/underscore/docs/underscore.html
   
   var methods = ['forEach', 'each', 'map', 'reduce', 'reduceRight', 'find', 'detect',
       'filter', 'select', 'reject', 'every', 'all', 'some', 'any', 'include',
@@ -32,11 +60,31 @@ Catwalk.Scope = (function () {
     };
   });
   
+  // Extend the constructor for things such as Scope.extend and Scope.include
   Base.extend.call(Scope, Base)
   
   // Instance methods
-  Scope.include(Catwalk.Events, {
+  // --------------------
+  Scope.include(
     
+    // binding and triggering of events
+    //
+    //     user_list.bind('add', function (model) {
+    //       console.log('model matches this scope's criteria', model)
+    //     })
+    
+    Catwalk.Events, {
+    
+    // A scope can create nested scopes, passing itself as the child scope's 'emitter'
+    //
+    //     user_list.scope('online', function (user) {
+    //       return user.is_online == true;
+    //     })
+    //
+    //     user_list.online.bind('add', function (user) {
+    //       console.log('User online', user)  
+    //     })
+    //
     scope: function (scope_name, criteria) {
       if(criteria == undefined) { // return scope
         return this._scopes[scope_name];
@@ -47,6 +95,7 @@ Catwalk.Scope = (function () {
       }
     },
     
+    // Notify this scope that a user has been instantiated, changed or removed
     update: function (model) {
       if(this.include(model)) {
         if(this.criteria(model)) return this;
@@ -56,7 +105,8 @@ Catwalk.Scope = (function () {
         this.add(model);
       }
     },
-        
+    
+    // Add to internal collection and trigger 'add'
     add: function (model) {
       this.collection.push(model);
       this.length = this.collection.length;
@@ -65,6 +115,7 @@ Catwalk.Scope = (function () {
       return this;
     },
     
+    // Remove from internal collection and trigger 'remove'
     remove: function (model) {
       var new_coll = [], removed = false;
       this.each(function (m) {
@@ -79,6 +130,7 @@ Catwalk.Scope = (function () {
       return this;
     },
     
+    // Default equality function. Overwrite this to implement your own model equality
     comparator: function (one, two) {
       return one == two;
     },
@@ -87,6 +139,10 @@ Catwalk.Scope = (function () {
       return this.map(function (model) {return model.attr(attr)});
     },
     
+    // Borrow Underscore.js' chain functionality.
+    //
+    //     user_list.chain().select(someFilter).value()
+    //
     chain: function () {
       return _(this.collection).chain();
     }
