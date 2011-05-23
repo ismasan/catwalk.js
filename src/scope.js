@@ -24,8 +24,9 @@ Catwalk.Scope = (function () {
   //       return /^is/i.test(model.attr('name'))
   //     })
   
-  function Scope (emitter, criteria) {
+  function Scope (emitter, criteria, parent) {
     this.emitter = emitter;
+    this._parent = parent;
     this.collection = [];
     this.criteria = criteria || function (model) {return true;}
     this._scopes = {};
@@ -85,23 +86,40 @@ Catwalk.Scope = (function () {
     //       console.log('User online', user)  
     //     })
     //
+    // You can also bind to nested scopes, in which case all criteria from all scopes in the chain must be TRUE
+    // for  the chain to trigger 'add' when a model changes
+    //
+    //     user_list.scope('johns', function (m) {
+    //       return /joh/i.test(m.attr('name'))  
+    //     })
+    //
+    //     var chain = user_list.scope('online').scope('johns').bind('add', someHandler)
+    //
     scope: function (scope_name, criteria) {
+      var base = this._base();
       if(criteria == undefined) { // return scope
-        return this._scopes[scope_name];
+        return base._scopes[scope_name];
       } else { // create scope
-        this._scopes[scope_name] = new Scope(this.emitter, criteria);
-        this[scope_name] = this._scopes[scope_name];
+        base._scopes[scope_name] = new Scope(this.emitter, criteria, this);
+        this[scope_name] = base._scopes[scope_name];
         return this;
       }
+    },
+    
+    // Look up the scope chain and return the "base" scope.
+    // See chained scopes
+    //
+    _base: function () {
+      return this._parent ? this._parent._base() : this;
     },
     
     // Notify this scope that a user has been instantiated, changed or removed
     update: function (model) {
       if(this.include(model)) {
-        if(this.criteria(model)) return this;
+        if(this._filter(model)) return this;
         this.remove(model);
       } else {
-        if(!this.criteria(model)) return this;
+        if(!this._filter(model)) return this;
         this.add(model);
       }
     },
@@ -128,6 +146,14 @@ Catwalk.Scope = (function () {
         this.trigger('remove', [model]);
       }
       return this;
+    },
+    
+    // Lookup the scope chain and pass model to each filter
+    // Return true if every criteria is true
+    _filter: function (model) {
+      if(!this.criteria(model)) return false;
+      if(this._parent && !this._parent._filter(model)) return false;
+      return true; 
     },
     
     // Default equality function. Overwrite this to implement your own model equality
