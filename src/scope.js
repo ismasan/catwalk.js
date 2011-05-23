@@ -37,7 +37,7 @@ Catwalk.Scope = (function () {
     // Bind to emitter's lifecycle events
     emitter.bind('add', handler).bind('remove', handler).bind('change', handler);
     // Retrospectively add previously created models to this scope.
-    // The scope might have been cerated dinamically at a later stage so model instances might already be around.
+    // The scope might have been created dinamically at a later stage so model instances might already be around.
     if(emitter.each) {
       emitter.each(function () {
         self.update(this);
@@ -89,7 +89,7 @@ Catwalk.Scope = (function () {
       if(criteria == undefined) { // return scope
         return this._scopes[scope_name];
       } else { // create scope
-        this._scopes[scope_name] = new Scope(this, criteria);
+        this._scopes[scope_name] = new Scope(this.emitter, criteria);
         this[scope_name] = this._scopes[scope_name];
         return this;
       }
@@ -121,7 +121,7 @@ Catwalk.Scope = (function () {
       this.each(function (m) {
         if(!this.comparator(m, model)) new_coll.push(m)
         else {removed = true;}
-      });
+      }, this);
       if(removed) {
         this.collection = new_coll;
         this.length = this.collection.length;
