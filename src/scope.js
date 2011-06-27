@@ -81,6 +81,9 @@ Catwalk.Scope = Class.setup(
   //     var chain = user_list.scope('online').scope('johns').bind('add', someHandler)
   //
   scope: function (scope_name, criteria) {
+    if(typeof arguments[0] == 'function') {
+      return new Catwalk.Scope(this.emitter, arguments[0], this);
+    }
     var base = this._base();
     if(criteria == undefined) { // return scope
       return base._scopes[scope_name];
