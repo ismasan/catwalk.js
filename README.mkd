@@ -1,6 +1,6 @@
 # Catwalk.js
 
-Spiking models, collections and emitters in JavaScript.
+Spiking models, scopes and emitters in JavaScript.
 
 ## THIS IS WORK IN PROGRESS
 
@@ -14,9 +14,9 @@ Define a model with some custom methods
       }
     });
     
-Define one or more collections listening to models
+Define one or more scopes listening to models
 
-    var user_list = new Catwalk.Collection(User)
+    var user_list = new Catwalk.Scope(User)
     
     user_list.bind('add', function (user) {
       console.log('A new user has been created!', user);
@@ -54,11 +54,11 @@ Now the scope triggers 'add' and 'remove' only for the right users
     user.attr({name: 'jane'}).save() // user_list.johns triggers 'remove'. user_list.janes triggers 'add'
 
     
-## Collections observing collections
+## Scopes observing scopes
 
-Collections bind to anything that triggers 'add' and 'remove' with a model instance as an argument, so you can have collections listening to other collections (or collection scopes!)
+Scopes bind to anything that triggers 'add' and 'remove' with a model instance as an argument, so you can have scopes listening to other scopes (or scope scopes!)
 
-    var johns_list = new Catwalk.Collection(user_list.johns)
+    var johns_list = new Catwalk.Scope(user_list.johns)
     
     var user = new User({name: 'john doe'}).save()
     
