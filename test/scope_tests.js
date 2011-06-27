@@ -23,6 +23,12 @@ test('it should save in subscribed collections', function () {
   console.log('END TEST 1')
 });
 
+test('it should populate from previous instances', function () {
+  var user = new this.User({name: 'ismael', online: true});
+  var another_scope = new Catwalk.Scope(this.User);
+  equal(user, another_scope.last())
+});
+
 test('it should save in relevant scopes', function () {
   // var user = new this.User({name: 'ismael', online: true});
   

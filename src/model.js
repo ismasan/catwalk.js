@@ -13,7 +13,11 @@ Catwalk.Model = Class.setup(
           this.attr(args)
         })
       }
-      this._trigger('add');
+      this.bind('add', function () {
+        this.constructor.add(this);
+      }).bind('remove', function () {
+        this.constructor.remove(this);
+      })._trigger('add');
     },
     
     // Run code without triggering associated events
@@ -67,8 +71,21 @@ Catwalk.Model = Class.setup(
   
 );
 
-// Catwalk.Model._name = klass_name;
+Catwalk.Model.add = function (model) {
+  this.collection = this.collection || [];
+  this.collection.push(model);
+  return this;
+}
+Catwalk.Model.remove = function (model) {
+  var new_coll = [],
+      old_coll = this.collection || [];
+  for(var i=0;i<old_coll.length;i++) {
+    if(old_coll[i] != model) new_coll.push(model)
+  }
+  this.collection = new_coll;
+  return this;
+}
 
 // Extend the constructor for things such as Model.extend and Model.include
 // Base.extend.call(Catwalk.Model, {include: Base.include})
-_.extend(Catwalk.Model, Catwalk.Events);
+_.extend(Catwalk.Model, array_methods_module, Catwalk.Events);

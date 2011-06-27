@@ -54,8 +54,8 @@ Catwalk.Scope = Class.setup(
     // Retrospectively add previously created models to this scope.
     // The scope might have been created dinamically at a later stage so model instances might already be around.
     if(emitter.each) {
-      emitter.each(function () {
-        self.update(this);
+      emitter.each(function (model) {
+        self.update(model);
       })
     }
     this.length = this.collection.length;
