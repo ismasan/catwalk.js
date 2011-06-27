@@ -8,7 +8,7 @@ Spiking models, scopes and emitters in JavaScript.
 
 Define a model with some custom methods
 
-    var User = Catwalk.Model().extend({
+    var User = Catwalk.Model.setup({
       name: function () {
         return this.attr('name')
       }
