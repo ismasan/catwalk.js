@@ -45,7 +45,6 @@ Catwalk.Scope = Class.setup(
     this._scopes = {};
     var self = this;
     var handler = function (model) {
-      console.log('handling', model)
       self.update(model);
       return self;
     }
@@ -114,7 +113,6 @@ Catwalk.Scope = Class.setup(
     this.collection.push(model);
     this.length = this.collection.length;
     this.trigger('add', [model]);
-    console.log('ADDING TO COLLECTION', this.foo, model, this.collection)
     return this;
   },
   

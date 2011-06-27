@@ -40,6 +40,12 @@ Catwalk.Model = Class.setup(
       return this.uid;
     },
     
+    // Set or get attributes. Triggers 'change' on set
+    // Examples:
+    //     model.attr() // => returns attributes object
+    //     model.attr('name') // => 'Joh Doe'
+    //     model.attr('name', 'Chuck Norris') // => sets new name, triggers 'change'
+    //     model.attr({name: 'Ckuck', lastnme: 'Norris'}) // => sets attributes, triggers 'change'
     attr: function () {
       if(arguments.length == 0) { // return all attributes
         return this.attributes
@@ -56,16 +62,6 @@ Catwalk.Model = Class.setup(
         this._trigger('change');
         return this;
       }
-    },
-    
-    destroy: function () {
-      this._trigger('remove');
-      return this;
-    },
-    
-    save: function () {
-      this._trigger('add');
-      return this;
     }
   }
   
