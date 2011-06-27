@@ -14,6 +14,7 @@ bundle 'catwalk.js' do
   file 'events.js'
   file 'model.js'
   file 'scope.js'
+  file 'rest_scope.js'
   file 'foot.js'
 end
 

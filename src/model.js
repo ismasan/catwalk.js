@@ -62,6 +62,13 @@ Catwalk.Model = Class.setup(
         this._trigger('change');
         return this;
       }
+    },
+    
+    // Lets have a specific interface between instances and anything that wants a serialized version,
+    // ie. REST scopes
+    // So we can use another library's models instead of these ones.
+    serializableAttributes: function () {
+      return this.attr();
     }
   }
   

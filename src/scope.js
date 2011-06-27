@@ -43,6 +43,7 @@ Catwalk.Scope = Class.setup(
     this.collection = [];
     this.criteria = criteria || function (model) {return true;}
     this._scopes = {};
+    this.options = {};
     var self = this;
     var handler = function (model) {
       self.update(model);
@@ -90,6 +91,14 @@ Catwalk.Scope = Class.setup(
     }
   },
   
+  // (optional) Populate options object.
+  // Useful for scope subclasses that need extra settings
+  //    var scope = new SomeScope(User).config({foo: 'bar'})
+  config: function (opts) {
+    _.extend(this.options, opts || {});
+    return this;
+  },
+  
   // Look up the scope chain and return the "base" scope.
   // See chained scopes
   //
@@ -110,9 +119,12 @@ Catwalk.Scope = Class.setup(
   
   // Add to internal collection and trigger 'add'
   add: function (model) {
-    this.collection.push(model);
-    this.length = this.collection.length;
-    this.trigger('add', [model]);
+    var context = this;
+    this.beforeAdd(function () {
+      context.collection.push(model);
+      context.length = context.collection.length;
+      context.trigger('add', [model]);
+    });
     return this;
   },
   
@@ -154,5 +166,13 @@ Catwalk.Scope = Class.setup(
   //
   chain: function () {
     return _(this.collection).chain();
+  },
+  
+  // ## HOOKS
+  
+  // Run this before adding and triggering.
+  // Override this hook for things like Ajax or persistence
+  beforeAdd: function (callback) {
+    callback();
   }
 });
