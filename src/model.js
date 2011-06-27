@@ -1,27 +1,35 @@
-Catwalk.Model = function (klass_name) {  
+Catwalk.Model = Class.setup(
   
-  function Model () {
-    this.uid = NewUUID();
-    this.attributes = {};
-    if(arguments.length > 0){this.attr(arguments[0])}
-    this._trigger('add');
-  }
+  Catwalk.Events,
   
-  Model._name = klass_name;
-  
-  // Extend the constructor for things such as Model.extend and Model.include
-  Base.extend.call(Model, Base)
-
-  Model.extend(Catwalk.Events)
-  
-  // Instance methods
-  Model.include(Catwalk.Events, {
+  {
+    init: function () {
+      this.uid = NewUUID();
+      this.attributes = {}; 
+      this._trigger_switch = true;
+      if(arguments.length > 0){
+        var args = arguments[0];
+        this._noTrigger(function () {
+          this.attr(args)
+        })
+      }
+      this._trigger('add');
+    },
+    
+    // Run code without triggering associated events
+    _noTrigger: function (func) {
+      this._trigger_switch = false;
+      func.call(this);
+      this._trigger_switch = true;
+    },
     
     // Trigger an event on the instance and on the constructor.
     // This is the main interface between models and scopes, which bind to model constructors
     _trigger: function (event_name) {
-      this.trigger(event_name);
-      this.constructor.trigger(event_name, [this]);
+      if(this._trigger_switch){
+        this.trigger(event_name);
+        this.constructor.trigger(event_name, [this]);
+      }
     },
     
     id: function () {
@@ -55,8 +63,12 @@ Catwalk.Model = function (klass_name) {
       this._trigger('add');
       return this;
     }
-  });
+  }
   
-  return Model;
-   
-}
+);
+
+// Catwalk.Model._name = klass_name;
+
+// Extend the constructor for things such as Model.extend and Model.include
+// Base.extend.call(Catwalk.Model, {include: Base.include})
+_.extend(Catwalk.Model, Catwalk.Events);

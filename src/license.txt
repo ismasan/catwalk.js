@@ -1,4 +1,4 @@
-/*  modelling.js, version <VERSION>
+/*  catwalk.js, version <VERSION>
 *  (c) 2011 Ismael Celis (@ismasan)
 *
 *  Released under MIT license.

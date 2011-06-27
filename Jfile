@@ -2,11 +2,12 @@ target_dir './dist'
 
 src_dir './src'
 
-version '0.0.1'
+version '0.0.1', :directory => false
 
 bundle 'catwalk.js' do
   license 'license.txt'
   file 'underscore.js'
+  file 'class.js'
   file 'uuid.js'
   file 'head.js'
   file 'utils.js'

@@ -1,6 +1,6 @@
 module('Scopes', {
   setup: function () {
-    this.User = Catwalk.Model('user').include({
+    this.User = User = Catwalk.Model.setup({
       name: function () {
         return this.attr('name')
       },
@@ -9,18 +9,22 @@ module('Scopes', {
       }
     });
     
-    this.scope = new Catwalk.Scope(this.User);
+    this.scope = scope = new Catwalk.Scope(this.User);
+    this.scope.foo = 'fooo'
   }
 });
 
 test('it should save in subscribed collections', function () {
+  console.log(1, this.scope.collection)
   var user = new this.User({name: 'ismael', online: true});
+  console.log(2, scope.collection)
   equal(user, this.scope.last())
   equal(1, this.scope.size())
+  console.log('END TEST 1')
 });
 
 test('it should save in relevant scopes', function () {
-  var user = new this.User({name: 'ismael', online: true});
+  // var user = new this.User({name: 'ismael', online: true});
   
   this.scope.scope('online', function (model) {
     return model.online();
@@ -35,6 +39,7 @@ test('it should save in relevant scopes', function () {
   equal(user, this.scope.online.last())
   equal(1, this.scope.online.size(), 'should add to one')
   equal(0, this.scope.offline.size(), 'should remove from another')
+  console.log('END TEST 2')
 })
 
 test('it should run attached handlers', function () {
