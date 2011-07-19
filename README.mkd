@@ -7,13 +7,13 @@ Spiking models, scopes and emitters in JavaScript.
 ## The gist
 
 Define a model with some custom methods
-``` js
-var User = Catwalk.Model.setup({
- name: function () {
-   return this.attr('name')
-  }
-});
-```   
+
+    var User = Catwalk.Model.setup({
+     name: function () {
+       return this.attr('name')
+     }
+    });
+   
 Define one or more scopes listening to models
 
     var user_list = new Catwalk.Scope(User)
